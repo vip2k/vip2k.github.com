@@ -1,41 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Mini Flappy Bird</title>
+  <title>Flappy Chim VIP</title>
   <style>
     body {
       margin: 0;
       background: #70c5ce;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
+      font-family: Arial, sans-serif;
     }
     canvas {
       border: 2px solid #000;
       background: #fff;
+      margin-top: 10px;
+    }
+    #controls {
+      text-align: center;
+    }
+    #startBtn, #restartBtn {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    #birdNameInput {
+      padding: 5px;
+      font-size: 16px;
+      width: 200px;
     }
   </style>
 </head>
 <body>
+  <div id="controls">
+    <input type="text" id="birdNameInput" placeholder="Đặt tên cho chim..." />
+    <button id="startBtn">Bắt đầu chơi</button>
+    <button id="restartBtn" style="display:none;">Chơi lại</button>
+  </div>
   <canvas id="gameCanvas" width="320" height="480"></canvas>
+
   <script>
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
 
-    let birdY = 200, gravity = 2, lift = -25, velocity = 0;
+    const startBtn = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const nameInput = document.getElementById("birdNameInput");
+
+    let birdY, gravity = 2, lift = -25, velocity;
     let pipes = [];
     let frame = 0;
     let score = 0;
+    let gameRunning = false;
+    let birdName = "Chim VIP";
 
-    document.addEventListener("keydown", () => velocity = lift);
+    function resetGame() {
+      birdY = 200;
+      velocity = 0;
+      pipes = [];
+      frame = 0;
+      score = 0;
+    }
 
     function drawBird() {
       ctx.fillStyle = "yellow";
       ctx.beginPath();
       ctx.arc(50, birdY, 15, 0, Math.PI * 2);
       ctx.fill();
+      ctx.fillStyle = "#000";
+      ctx.font = "12px Arial";
+      ctx.fillText(birdName, 10, birdY - 20);
     }
 
     function drawPipes() {
@@ -70,23 +107,23 @@
           50 - 15 < p.x + 50 &&
           (birdY - 15 < p.top || birdY + 15 > p.top + 100)
         ) {
-          alert("Game Over! Score: " + score);
-          document.location.reload();
+          endGame();
         }
       }
       if (birdY + 15 > canvas.height || birdY - 15 < 0) {
-        alert("Game Over! Score: " + score);
-        document.location.reload();
+        endGame();
       }
     }
 
     function drawScore() {
       ctx.fillStyle = "#000";
       ctx.font = "20px Arial";
-      ctx.fillText("Score: " + score, 10, 30);
+      ctx.fillText("Điểm: " + score, 10, 30);
     }
 
     function gameLoop() {
+      if (!gameRunning) return;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       velocity += gravity;
@@ -102,7 +139,27 @@
       requestAnimationFrame(gameLoop);
     }
 
-    gameLoop();
+    function startGame() {
+      birdName = nameInput.value.trim() || "Chim VIP";
+      resetGame();
+      gameRunning = true;
+      startBtn.style.display = "none";
+      nameInput.style.display = "none";
+      restartBtn.style.display = "none";
+      gameLoop();
+    }
+
+    function endGame() {
+      gameRunning = false;
+      restartBtn.style.display = "inline-block";
+    }
+
+    document.addEventListener("keydown", () => {
+      if (gameRunning) velocity = lift;
+    });
+
+    startBtn.onclick = startGame;
+    restartBtn.onclick = startGame;
   </script>
 </body>
 </html>
