@@ -111,7 +111,43 @@
   </style>
 </head>
 <body>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Click Game</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial;
+      margin-top: 100px;
+    }
+    button {
+      font-size: 24px;
+      padding: 20px 40px;
+      cursor: pointer;
+    }
+    #score {
+      font-size: 32px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
 
+  <h1>Game Click để ghi điểm</h1>
+  <button onclick="addScore()">Bấm vào đây!</button>
+  <div id="score">Điểm: 0</div>
+
+  <script>
+    let score = 0;
+    function addScore() {
+      score++;
+      document.getElementById("score").textContent = "Điểm: " + score;
+    }
+  </script>
+
+</body>
+</html>
   <header>
     <h1>Cá cảnh Vũkaka</h1>
     <p>Nơi mua bán cá cảnh uy tín, chất lượng, và đáng tin cậy</p>
