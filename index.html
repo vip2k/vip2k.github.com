@@ -50,7 +50,7 @@
     const restartBtn = document.getElementById("restartBtn");
     const nameInput = document.getElementById("birdNameInput");
 
-    let birdY, gravity = 2, lift = -25, velocity;
+    let birdY, gravity = 1, lift = -12, velocity;
     let pipes = [];
     let frame = 0;
     let score = 0;
@@ -155,6 +155,10 @@
     }
 
     document.addEventListener("keydown", () => {
+      if (gameRunning) velocity = lift;
+    });
+
+    canvas.addEventListener("touchstart", () => {
       if (gameRunning) velocity = lift;
     });
 
