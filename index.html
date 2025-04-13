@@ -55,6 +55,8 @@
     let frame = 0;
     let score = 0;
     let gameRunning = false;
+    let countdown = 3;
+    let countdownInterval;
     let birdName = "Chim VIP";
 
     function resetGame() {
@@ -63,6 +65,7 @@
       pipes = [];
       frame = 0;
       score = 0;
+      countdown = 3;
     }
 
     function drawBird() {
@@ -121,6 +124,14 @@
       ctx.fillText("Điểm: " + score, 10, 30);
     }
 
+    function drawCountdown() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#000";
+      ctx.font = "60px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText(countdown, canvas.width / 2, canvas.height / 2);
+    }
+
     function gameLoop() {
       if (!gameRunning) return;
 
@@ -139,31 +150,12 @@
       requestAnimationFrame(gameLoop);
     }
 
-    function startGame() {
-      birdName = nameInput.value.trim() || "Chim VIP";
-      resetGame();
-      gameRunning = true;
-      startBtn.style.display = "none";
-      nameInput.style.display = "none";
-      restartBtn.style.display = "none";
-      gameLoop();
-    }
-
-    function endGame() {
-      gameRunning = false;
-      restartBtn.style.display = "inline-block";
-    }
-
-    document.addEventListener("keydown", () => {
-      if (gameRunning) velocity = lift;
-    });
-
-    canvas.addEventListener("touchstart", () => {
-      if (gameRunning) velocity = lift;
-    });
-
-    startBtn.onclick = startGame;
-    restartBtn.onclick = startGame;
-  </script>
-</body>
-</html>
+    function startCountdown() {
+      drawCountdown();
+      countdownInterval = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+          drawCountdown();
+        } else {
+          clearInterval(countdownInterval);
+          gameRunning = true
