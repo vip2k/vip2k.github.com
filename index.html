@@ -2,202 +2,163 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Flappy Chim VIP</title>
+  <title>Game Chim Bay</title>
   <style>
     body {
       margin: 0;
       background: #70c5ce;
       font-family: Arial, sans-serif;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-
-    canvas {
-      border: 2px solid #000;
-      background: #fff;
+      justify-content: start;
     }
 
     #controls {
-      margin-bottom: 10px;
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
-    #birdNameInput {
-      padding: 5px;
-      font-size: 16px;
+    #gameCanvas {
+      width: 95vw;
+      height: 70vh;
+      background: #fff;
+      border: 2px solid #000;
+      display: block;
     }
 
-    button {
-      padding: 6px 12px;
-      font-size: 16px;
-      margin-left: 10px;
+    #countdown {
+      position: absolute;
+      font-size: 40px;
+      font-weight: bold;
+      color: red;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
     }
   </style>
 </head>
 <body>
 
-  <div id="controls">
-    <input type="text" id="birdNameInput" placeholder="Đặt tên chim...">
-    <button id="startBtn">Bắt đầu</button>
-    <button id="restartBtn" style="display:none;">Chơi lại</button>
-  </div>
+<div id="controls">
+  <input type="text" id="playerName" placeholder="Tên của bạn" />
+  <button onclick="startGame()">Chơi lại</button>
+</div>
 
-  <canvas id="gameCanvas" width="320" height="480"></canvas>
+<canvas id="gameCanvas"></canvas>
+<div id="countdown"></div>
 
-  <script>
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
+<script>
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
 
-    const startBtn = document.getElementById("startBtn");
-    const restartBtn = document.getElementById("restartBtn");
-    const nameInput = document.getElementById("birdNameInput");
+  let birdY = canvas.height / 2;
+  let birdVelocity = 0;
+  let gravity = 0.3; // giảm trọng lực để rơi chậm hơn
+  let isGameRunning = false;
+  let pipes = [];
+  let pipeWidth = 50;
+  let gap = 150;
+  let frame = 0;
+  let score = 0;
+  let playerName = '';
+  let countdownEl = document.getElementById('countdown');
 
-    let birdY = 200;
-    let velocity = 0;
-    let gravity = 0.5;
-    let lift = -8;
-    let pipes = [];
-    let frame = 0;
-    let score = 0;
-    let birdName = "Chim VIP";
-    let running = false;
-    let countdown = 3;
-    let countdownTimer;
+  document.addEventListener('click', () => {
+    if (isGameRunning) {
+      birdVelocity = -5;
+    }
+  });
 
-    function resetGame() {
-      birdY = 200;
-      velocity = 0;
-      pipes = [];
-      frame = 0;
-      score = 0;
+  function startGame() {
+    playerName = document.getElementById('playerName').value || 'Người chơi';
+    birdY = canvas.height / 2;
+    birdVelocity = 0;
+    pipes = [];
+    frame = 0;
+    score = 0;
+    isGameRunning = false;
+
+    countdown(3); // bắt đầu đếm ngược 3 giây
+  }
+
+  function countdown(seconds) {
+    countdownEl.textContent = seconds;
+    if (seconds > 0) {
+      setTimeout(() => countdown(seconds - 1), 1000);
+    } else {
+      countdownEl.textContent = '';
+      isGameRunning = true;
+      gameLoop();
+    }
+  }
+
+  function gameLoop() {
+    if (!isGameRunning) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Vẽ chim
+    ctx.beginPath();
+    ctx.arc(50, birdY, 15, 0, Math.PI * 2);
+    ctx.fillStyle = "yellow";
+    ctx.fill();
+
+    // Vẽ tên người chơi
+    ctx.fillStyle = "black";
+    ctx.font = "16px Arial";
+    ctx.fillText(playerName, 10, birdY - 20);
+
+    // Cập nhật vị trí chim
+    birdVelocity += gravity;
+    birdY += birdVelocity;
+
+    // Tạo pipes mới
+    if (frame % 90 === 0) {
+      let topHeight = Math.random() * (canvas.height - gap - 100);
+      pipes.push({ x: canvas.width, top: topHeight });
     }
 
-    function drawBird() {
-      ctx.fillStyle = "yellow";
-      ctx.beginPath();
-      ctx.arc(50, birdY, 15, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#000";
-      ctx.font = "12px Arial";
-      ctx.fillText(birdName, 10, birdY - 20);
-    }
-
-    function drawPipes() {
+    // Vẽ pipes
+    for (let i = 0; i < pipes.length; i++) {
+      let p = pipes[i];
+      p.x -= 2;
       ctx.fillStyle = "green";
-      pipes.forEach(pipe => {
-        ctx.fillRect(pipe.x, 0, 50, pipe.top);
-        ctx.fillRect(pipe.x, pipe.top + 100, 50, canvas.height - pipe.top - 100);
-      });
-    }
+      ctx.fillRect(p.x, 0, pipeWidth, p.top);
+      ctx.fillRect(p.x, p.top + gap, pipeWidth, canvas.height - p.top - gap);
 
-    function updatePipes() {
-      if (frame % 100 === 0) {
-        let top = Math.random() * 200 + 50;
-        pipes.push({ x: canvas.width, top });
-      }
-
-      pipes.forEach(pipe => pipe.x -= 2);
-
-      pipes = pipes.filter(pipe => {
-        if (pipe.x + 50 < 0) {
-          score++;
-          return false;
-        }
-        return true;
-      });
-    }
-
-    function checkCollision() {
-      for (let pipe of pipes) {
-        if (
-          50 + 15 > pipe.x &&
-          50 - 15 < pipe.x + 50 &&
-          (birdY - 15 < pipe.top || birdY + 15 > pipe.top + 100)
-        ) {
-          endGame();
+      // Kiểm tra va chạm
+      if (50 > p.x && 50 < p.x + pipeWidth) {
+        if (birdY < p.top || birdY > p.top + gap) {
+          alert(`Game Over! Điểm: ${score}`);
+          return;
         }
       }
 
-      if (birdY + 15 > canvas.height || birdY - 15 < 0) {
-        endGame();
+      // Tính điểm
+      if (p.x + pipeWidth === 50) {
+        score++;
       }
     }
 
-    function drawScore() {
-      ctx.fillStyle = "#000";
-      ctx.font = "18px Arial";
-      ctx.fillText("Điểm: " + score, 10, 25);
-    }
+    // Vẽ điểm
+    ctx.fillStyle = "black";
+    ctx.fillText("Điểm: " + score, 10, 20);
 
-    function drawCountdown() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#000";
-      ctx.font = "60px Arial";
-      ctx.textAlign = "center";
-      ctx.fillText(countdown, canvas.width / 2, canvas.height / 2);
-    }
+    frame++;
+    requestAnimationFrame(gameLoop);
+  }
 
-    function gameLoop() {
-      if (!running) return;
+  startGame(); // chạy tự động khi tải trang
+</script>
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      velocity += gravity;
-      birdY += velocity;
-
-      drawBird();
-      updatePipes();
-      drawPipes();
-      checkCollision();
-      drawScore();
-
-      frame++;
-      requestAnimationFrame(gameLoop);
-    }
-
-    function startCountdown() {
-      drawCountdown();
-      countdownTimer = setInterval(() => {
-        countdown--;
-        if (countdown > 0) {
-          drawCountdown();
-        } else {
-          clearInterval(countdownTimer);
-          running = true;
-          gameLoop();
-        }
-      }, 1000);
-    }
-
-    function startGame() {
-      birdName = nameInput.value.trim() || "Chim VIP";
-      resetGame();
-      startBtn.style.display = "none";
-      restartBtn.style.display = "none";
-      nameInput.style.display = "none";
-      countdown = 3;
-      startCountdown();
-    }
-
-    function endGame() {
-      running = false;
-      alert("Game Over! Điểm của bạn: " + score);
-      restartBtn.style.display = "inline-block";
-      nameInput.style.display = "inline-block";
-    }
-
-    document.addEventListener("keydown", () => {
-      if (running) velocity = lift;
-    });
-
-    canvas.addEventListener("touchstart", () => {
-      if (running) velocity = lift;
-    });
-
-    startBtn.onclick = startGame;
-    restartBtn.onclick = startGame;
-  </script>
 </body>
 </html>
