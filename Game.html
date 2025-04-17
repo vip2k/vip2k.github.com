@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vào Game</title>
+</head>
+<body>
+  <h1>Chào mừng bạn đến với thế giới tu tiên!</h1>
+  <p>Bạn đã đăng nhập thành công.</p>
+
+  <button onclick="logout()">Đăng xuất</button>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyANcM7Z1MVTGhMVpNIgAwdsIaTCXNoKbvY",
+      authDomain: "vukaka-23a2c.firebaseapp.com",
+      projectId: "vukaka-23a2c",
+      storageBucket: "vukaka-23a2c.firebasestorage.app",
+      messagingSenderId: "524614441708",
+      appId: "1:524614441708:web:6c239e7f8c0544155d23c9"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Nếu người dùng chưa đăng nhập => chuyển về trang đăng nhập
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "index.html";
+      }
+    });
+
+    // Hàm đăng xuất
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "index.html";
+      });
+    }
+  </script>
+</body>
+</html>
