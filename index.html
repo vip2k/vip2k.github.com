@@ -1,86 +1,27 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Trang đăng nhập game</title>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng ký tài khoản - Vũkaka</title>
 </head>
 <body>
-  <h1> chào quý bạn và các vị web đang làm chưa có gì cả hẹn sớm ngày ra mắt game nhé!</h1>
+  <h1>Chào mừng đến với Vũkaka</h1>
+  <h2>Đăng ký tài khoản</h2>
 
-  <h2>Đăng ký</h2>
   <form id="registerForm">
-    <input type="email" id="registerEmail" placeholder="Email" required />
-    <input type="password" id="registerPassword" placeholder="Mật khẩu" required />
+    <label for="registerEmail">Email:</label><br>
+    <input type="email" id="registerEmail" placeholder="Nhập email" required><br><br>
+
+    <label for="registerPassword">Mật khẩu:</label><br>
+    <input type="password" id="registerPassword" placeholder="Nhập mật khẩu" required><br><br>
+
     <button type="submit">Đăng ký</button>
   </form>
 
-  <h2>Đăng nhập</h2>
-  <form id="loginForm">
-    <input type="email" id="loginEmail" placeholder="Email" required />
-    <input type="password" id="loginPassword" placeholder="Mật khẩu" required />
-    <button type="submit">Đăng nhập</button>
-  </form>
+  <div id="message" style="margin-top: 20px; font-weight: bold;"></div>
 
-  <div id="message"></div>
-
-  <script>
-    // Cấu hình Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyANcM7Z1MVTGhMVpNIgAwdsIaTCXNoKbvY",
-      authDomain: "vukaka-23a2c.firebaseapp.com",
-      projectId: "vukaka-23a2c",
-      storageBucket: "vukaka-23a2c.firebasestorage.app",
-      messagingSenderId: "524614441708",
-      appId: "1:524614441708:web:6c239e7f8c0544155d23c9",
-      measurementId: "G-TX06HKWF6R"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    firebase.analytics();
-
-    const messageDiv = document.getElementById('message');
-
-    // Đăng ký
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const email = document.getElementById('registerEmail').value;
-      const password = document.getElementById('registerPassword').value;
-
-      auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          messageDiv.innerHTML = `<p style="color:green;">Đăng ký thành công: ${user.email}</p>`;
-        })
-        .catch((error) => {
-          messageDiv.innerHTML = `<p style="color:red;">Lỗi đăng ký: ${error.message}</p>`;
-        });
-    });
-
-    // Đăng nhập
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
-
-      auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          messageDiv.innerHTML = `<p style="color:blue;">Đăng nhập thành công! Xin chào, ${user.email}</p>`;
-
-          // Ví dụ: chuyển hướng vào game (bạn có thể tạo game.html sau)
-          // window.location.href = "game.html";
-        })
-        .catch((error) => {
-          messageDiv.innerHTML = `<p style="color:red;">Lỗi đăng nhập: ${error.message}</p>`;
-        });
-    });
-  </script>
-</body>
-</html>
+  <script type="module">
+    // Import Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gsta
