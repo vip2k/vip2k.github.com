@@ -2,26 +2,34 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
+  <title>Đăng ký & Đăng nhập - Vukaka</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đăng ký tài khoản - Vũkaka</title>
 </head>
 <body>
-  <h1>Chào mừng đến với Vũkaka</h1>
-  <h2>Đăng ký tài khoản</h2>
+  <h2>Chào mừng đến Vukaka</h2>
+  <h3>Đăng ký / Đăng nhập</h3>
 
-  <form id="registerForm">
-    <label for="registerEmail">Email:</label><br>
-    <input type="email" id="registerEmail" placeholder="Nhập email" required><br><br>
+  <input type="email" id="email" placeholder="Nhập email"><br><br>
+  <input type="password" id="password" placeholder="Nhập mật khẩu"><br><br>
 
-    <label for="registerPassword">Mật khẩu:</label><br>
-    <input type="password" id="registerPassword" placeholder="Nhập mật khẩu" required><br><br>
-
-    <button type="submit">Đăng ký</button>
-  </form>
-
-  <div id="message" style="margin-top: 20px; font-weight: bold;"></div>
+  <button id="registerBtn">Đăng ký</button>
+  <button id="loginBtn">Đăng nhập</button>
 
   <script type="module">
-    // Import Firebase SDK
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gsta
+    // Import Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // Firebase config của bạn
+    const firebaseConfig = {
+      apiKey: "AIzaSyCkSq9g5dSxySXIXaBAGfxpcho8smK-L8A",
+      authDomain: "vukaka-993cd.firebaseapp.com",
+      projectId: "vukaka-993cd",
+      storageBucket: "vukaka-993cd.appspot.com",
+      messagingSenderId: "620600583578",
+      appId: "1:620600583578:web:2abc15c9951ebe000c8623",
+      measurementId: "G-0Z05LZML16"
+    };
+
+    //
