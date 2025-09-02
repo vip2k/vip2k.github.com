@@ -2,45 +2,48 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vào Game</title>
+  <title>Game - Vukaka</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-  <h1>Chào mừng bạn đến với thế giới tu tiên!</h1>
-  <p>Bạn đã đăng nhập thành công.</p>
+  <h2>Chào mừng đến Vukaka Game</h2>
+  <p id="welcome"></p>
+  <button id="logoutBtn">Đăng xuất</button>
 
-  <button onclick="logout()">Đăng xuất</button>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
-
-  <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyANcM7Z1MVTGhMVpNIgAwdsIaTCXNoKbvY",
-      authDomain: "vukaka-23a2c.firebaseapp.com",
-      projectId: "vukaka-23a2c",
-      storageBucket: "vukaka-23a2c.firebasestorage.app",
-      messagingSenderId: "524614441708",
-      appId: "1:524614441708:web:6c239e7f8c0544155d23c9"
+      apiKey: "AIzaSyCkSq9g5dSxySXIXaBAGfxpcho8smK-L8A",
+      authDomain: "vukaka-993cd.firebaseapp.com",
+      projectId: "vukaka-993cd",
+      storageBucket: "vukaka-993cd.appspot.com",
+      messagingSenderId: "620600583578",
+      appId: "1:620600583578:web:2abc15c9951ebe000c8623",
+      measurementId: "G-0Z05LZML16"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-    // Nếu người dùng chưa đăng nhập => chuyển về trang đăng nhập
-    auth.onAuthStateChanged(user => {
-      if (!user) {
+    // Kiểm tra trạng thái đăng nhập
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById("welcome").textContent = `Xin chào, ${user.email}!`;
+      } else {
+        alert("Bạn chưa đăng nhập!");
         window.location.href = "index.html";
       }
     });
 
-    // Hàm đăng xuất
-    function logout() {
-      auth.signOut().then(() => {
+    // Đăng xuất
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth).then(() => {
+        alert("Đã đăng xuất!");
         window.location.href = "index.html";
       });
-    }
+    });
   </script>
 </body>
 </html>
