@@ -2,26 +2,20 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Đăng ký & Đăng nhập - Vukaka</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập - Vukaka</title>
 </head>
 <body>
-  <h2>Chào mừng đến Vukaka</h2>
-  <h3>Đăng ký / Đăng nhập</h3>
-
-  <input type="email" id="email" placeholder="Nhập email"><br><br>
-  <input type="password" id="password" placeholder="Nhập mật khẩu"><br><br>
-
+  <h2>Đăng ký / Đăng nhập</h2>
+  <input type="email" id="email" placeholder="Email"><br>
+  <input type="password" id="password" placeholder="Mật khẩu"><br>
   <button id="registerBtn">Đăng ký</button>
   <button id="loginBtn">Đăng nhập</button>
 
+  <!-- Thêm đoạn code xử lý Firebase tại đây -->
   <script type="module">
-    // Import Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    // Firebase config của bạn
     const firebaseConfig = {
       apiKey: "AIzaSyCkSq9g5dSxySXIXaBAGfxpcho8smK-L8A",
       authDomain: "vukaka-993cd.firebaseapp.com",
@@ -29,7 +23,33 @@
       storageBucket: "vukaka-993cd.appspot.com",
       messagingSenderId: "620600583578",
       appId: "1:620600583578:web:2abc15c9951ebe000c8623",
-      measurementId: "G-0Z05LZML16"
     };
 
-    //
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById("registerBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("Đăng ký thành công!");
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Đăng nhập thành công!");
+        window.location.href = "game.html"; // Chuyển hướng sau khi login
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  </script>
+</body>
+</html>
