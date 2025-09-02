@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng ký & Đăng nhập</title>
+  <script type="module">
+    // Import Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } 
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    // Cấu hình Firebase
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "vukaka-993cd.firebaseapp.com",
+      projectId: "vukaka-993cd",
+      storageBucket: "vukaka-993cd.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Khởi tạo Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Đăng ký
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("Đăng ký thành công!");
+        window.location.href = "game.html";
+      } catch (error) {
+        alert("Lỗi: " + error.message);
+      }
+    });
+
+    // Đăng nhập
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Đăng nhập thành công!");
+        window.location.href = "game.html";
+      } catch (error) {
+        alert("Lỗi: " + error.message);
+      }
+    });
+
+    // Kiểm tra trạng thái đăng nhập
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("Đang đăng nhập:", user.email);
+      }
+    });
+  </script>
+</head>
+<body>
+  <h1>Đăng ký</h1>
+  <form id="signupForm">
+    <input type="email" id="signupEmail" placeholder="Email" required>
+    <input type="password" id="signupPassword" placeholder="Mật khẩu" required>
+    <button type="submit">Đăng ký</button>
+  </form>
+
+  <h1>Đăng nhập</h1>
+  <form id="loginForm">
+    <input type="email" id="loginEmail" placeholder="Email" required>
+    <input type="password" id="loginPassword" placeholder="Mật khẩu" required>
+    <button type="submit">Đăng nhập</button>
+  </form>
+</body>
+</html>
