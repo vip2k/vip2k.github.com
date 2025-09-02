@@ -2,48 +2,83 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Game - Vukaka</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Vũkaka</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header button {
+      background: #ff4444;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 40px;
+      padding: 20px;
+    }
+    .game-box {
+      background: white;
+      width: 30%;
+      height: 200px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      padding: 20px;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+    .game-box:hover {
+      transform: scale(1.05);
+    }
+  </style>
 </head>
 <body>
-  <h2>Chào mừng đến Vukaka Game</h2>
-  <p id="welcome"></p>
-  <button id="logoutBtn">Đăng xuất</button>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+<header>
+  <h2>Game Vũkaka</h2>
+  <button onclick="logout()">Đăng xuất</button>
+</header>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCkSq9g5dSxySXIXaBAGfxpcho8smK-L8A",
-      authDomain: "vukaka-993cd.firebaseapp.com",
-      projectId: "vukaka-993cd",
-      storageBucket: "vukaka-993cd.appspot.com",
-      messagingSenderId: "620600583578",
-      appId: "1:620600583578:web:2abc15c9951ebe000c8623",
-      measurementId: "G-0Z05LZML16"
-    };
+<div class="container">
+  <div class="game-box" onclick="playGame1()">Game 1</div>
+  <div class="game-box" onclick="playGame2()">Game 2</div>
+  <div class="game-box" onclick="playGame3()">Game 3</div>
+</div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+<script>
+  // Giả lập chức năng Đăng xuất (tùy bạn kết nối Firebase logout)
+  function logout() {
+    alert("Bạn đã đăng xuất!");
+    window.location.href = "index.html"; // quay lại trang chính
+  }
 
-    // Kiểm tra trạng thái đăng nhập
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById("welcome").textContent = `Xin chào, ${user.email}!`;
-      } else {
-        alert("Bạn chưa đăng nhập!");
-        window.location.href = "index.html";
-      }
-    });
+  function playGame1() {
+    alert("Game 1: Đang phát triển!");
+  }
 
-    // Đăng xuất
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => {
-        alert("Đã đăng xuất!");
-        window.location.href = "index.html";
-      });
-    });
-  </script>
+  function playGame2() {
+    alert("Game 2: Đang phát triển!");
+  }
+
+  function playGame3() {
+    alert("Game 3: Đang phát triển!");
+  }
+</script>
+
 </body>
 </html>
