@@ -1,77 +1,56 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>Đăng ký & Đăng nhập</title>
+  <title>Đăng nhập & Đăng ký</title>
   <script type="module">
-    // Import Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } 
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-    // Cấu hình Firebase
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
+      apiKey: "AIzaSyCkSq9g5dSxySXIXaBAGfxpcho8smK-L8A",
       authDomain: "vukaka-993cd.firebaseapp.com",
       projectId: "vukaka-993cd",
       storageBucket: "vukaka-993cd.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      messagingSenderId: "THAY_VAO",
+      appId: "THAY_VAO"
     };
 
-    // Khởi tạo Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Đăng ký
-    document.getElementById("signupForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("signupEmail").value;
-      const password = document.getElementById("signupPassword").value;
+    async function register() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
       try {
         await createUserWithEmailAndPassword(auth, email, password);
         alert("Đăng ký thành công!");
-        window.location.href = "game.html";
       } catch (error) {
-        alert("Lỗi: " + error.message);
+        alert(error.message);
       }
-    });
+    }
 
-    // Đăng nhập
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
+    async function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
       try {
         await signInWithEmailAndPassword(auth, email, password);
         alert("Đăng nhập thành công!");
-        window.location.href = "game.html";
+        window.location.href = "game.html"; // Chuyển sang game sau khi đăng nhập
       } catch (error) {
-        alert("Lỗi: " + error.message);
+        alert(error.message);
       }
-    });
+    }
 
-    // Kiểm tra trạng thái đăng nhập
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("Đang đăng nhập:", user.email);
-      }
-    });
+    window.register = register;
+    window.login = login;
   </script>
 </head>
 <body>
-  <h1>Đăng ký</h1>
-  <form id="signupForm">
-    <input type="email" id="signupEmail" placeholder="Email" required>
-    <input type="password" id="signupPassword" placeholder="Mật khẩu" required>
-    <button type="submit">Đăng ký</button>
-  </form>
-
-  <h1>Đăng nhập</h1>
-  <form id="loginForm">
-    <input type="email" id="loginEmail" placeholder="Email" required>
-    <input type="password" id="loginPassword" placeholder="Mật khẩu" required>
-    <button type="submit">Đăng nhập</button>
-  </form>
+  <h2>Đăng nhập & Đăng ký</h2>
+  <input type="email" id="email" placeholder="Email"><br><br>
+  <input type="password" id="password" placeholder="Mật khẩu"><br><br>
+  <button onclick="register()">Đăng ký</button>
+  <button onclick="login()">Đăng nhập</button>
 </body>
 </html>
